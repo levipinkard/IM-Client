@@ -16,22 +16,25 @@ import java.util.Scanner;
 public class IMServer extends Thread {
   PrintWriter writer;
 	static class ServerThread implements Runnable {
-		static volatile String chatlog;
+    static String oldString;
+    static String newString;
+    static String[] chatStr = new String[2];
 		Socket client = null;
+    static int threadCount = 0;
 		public ServerThread(Socket c) {
-        client = c;
+      client = c;
     }
 		public void run() {
-			while(true) {
+      int localThreadCount = threadCount;
+      threadCount = threadCount + 1;
+      while(true) {
 				try {
-					BufferedReader clientData = new BufferedReader(new InputStreamReader(client.getInputStream()));
-					String clientMessage = clientData.readLine();
-					DataOutputStream backToClient = new DataOutputStream(client.getOutputStream());
-					PrintWriter pw = new PrintWriter(new FileOutputStream(new File("chatlog.txt"),true));
-					pw.println(clientMessage);
-					pw.close();
-					String chatlog = new Scanner(new File("chatlog.txt")).useDelimiter("\\Z").next();
-					backToClient.writeBytes(chatlog + "\n");
+          //BufferedReader clientData = new BufferedReader(new InputStreamReader(client.getInputStream()));
+          DataOutputStream backToClient = new DataOutputStream(client.getOutputStream());
+          //String clientMessage = clientData.readLine();
+          //string = clientMessage
+					backToClient.writeBytes("what up" + "\n");
+
 				}catch (Exception e) {
 					System.err.println(e.getMessage());
 				}
@@ -49,7 +52,7 @@ public class IMServer extends Thread {
 		ServerSocket serverSock = new ServerSocket(1337);
 		while(true) {
 			Socket connection = serverSock.accept();
-			new Thread(new ServerThread(connection)).start();
+      new Thread(new ServerThread(connection)).start();
 		}
 	}
 }
