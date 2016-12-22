@@ -30,7 +30,7 @@ public class imclient extends Thread {
 					String incoming = incomingMessage.readLine();
 					//Stops null spamming at disconnect
 					if (incoming != null) {
-						System.out.println(incoming);
+						System.out.println("\n" + incoming + "\n");
 					}
 				}
 				catch (IOException e) {
@@ -48,16 +48,16 @@ public class imclient extends Thread {
 		System.out.print("Enter hostname: ");
 		Scanner hostIn = new Scanner(System.in);
 		String hostName = hostIn.nextLine();
-		String message = null;
 		//Starts socket at user specified hostname
 		Socket server = new Socket(hostName, 1337);
 		new Thread(new ServerThread(server)).start();
 		//Loops infinitely
+		DataOutputStream broadcastMessage = new DataOutputStream(server.getOutputStream());
+		broadcastMessage.writeBytes(userName + " has joined. \n");
 		while (true) {
-			//Gets user message, opens output stream
-			BufferedReader userMessage = new BufferedReader(new InputStreamReader(System.in));
-			message = userMessage.readLine();
-			DataOutputStream broadcastMessage = new DataOutputStream(server.getOutputStream());
+			//Gets user message
+			Scanner userMessage = new Scanner(System.in);
+			String message = userMessage.nextLine();
 			//Attaches username to message when sending
 			broadcastMessage.writeBytes(userName + ": " + message + "\n");
 		}
