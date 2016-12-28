@@ -9,12 +9,17 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Scanner;
 import java.net.InetAddress;
+import java.text.DateFormat;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 
 public class IMServer extends Thread {
 	static class ServerThread implements Runnable {
     //Declares variable for whole class
     Socket client = null;
+
+
 		public ServerThread(Socket c) {
       client = c;
     }
@@ -57,8 +62,10 @@ public class IMServer extends Thread {
       DataOutputStream backToClient = new DataOutputStream(connection.getOutputStream());
       Scanner textIn = new Scanner(System.in);
       String thisClient = textIn.nextLine();
-      //Attaches username when sending
-      backToClient.writeBytes(userString + ": " + thisClient + "\n");
+			DateFormat df = new SimpleDateFormat("HH:mm:ss");
+			Date currentTimestamp = new Date();
+			//Attaches username when sending
+      backToClient.writeBytes(df.format(currentTimestamp) + " " + userString + ": " + thisClient + "\n");
 		}
 	}
 }
