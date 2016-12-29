@@ -18,8 +18,6 @@ public class IMServer extends Thread {
 	static class ServerThread implements Runnable {
     //Declares variable for whole class
     Socket client = null;
-
-
 		public ServerThread(Socket c) {
       client = c;
     }
@@ -54,10 +52,10 @@ public class IMServer extends Thread {
     ServerSocket serverSock = new ServerSocket(1337);
     //Accepts connection from client
   	Socket connection = serverSock.accept();
-    //Loops infinitely
+		//Starts thread
+		new Thread(new ServerThread(connection)).start();
+		//Loops infinitely
     while(true) {
-      //Starts thread
-      new Thread(new ServerThread(connection)).start();
       //Gets user text, sends it
       DataOutputStream backToClient = new DataOutputStream(connection.getOutputStream());
       Scanner textIn = new Scanner(System.in);

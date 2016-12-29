@@ -55,10 +55,9 @@ public class imclient extends Thread {
     Socket server = new Socket(hostName, 1337);
     new Thread(new ServerThread(server)).start();
     //Loops infinitely
-    DataOutputStream broadcastMessage = new DataOutputStream(server.getOutputStream());
-    broadcastMessage.writeBytes(userName + " has joined. \n");
     while (true) {
       //Gets user message
+      DataOutputStream broadcastMessage = new DataOutputStream(server.getOutputStream());
       Scanner userMessage = new Scanner(System.in);
       String message = userMessage.nextLine();
       DateFormat df = new SimpleDateFormat("HH:mm:ss");
